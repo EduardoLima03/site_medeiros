@@ -69,6 +69,49 @@ Senha `123456` para todos:
 | marketing | marketing@medeiros.com.br |
 | client | cliente@teste.com |
 
+## Tutorial: como criar e editar páginas
+
+Existem **3 formas** de criar/editar conteúdo, conforme o tipo de página:
+
+### 1. Página inicial (home) → Blocos editáveis
+
+Painel → **Administração → Blocos (Home)** (`/dashboard/admin/blocos`)
+
+- **Adicionar bloco**: escolha o tipo (Banner/Hero, Texto, Imagem, Grid de Ofertas,
+  Achados e Perdidos, Vagas, CTA App, Mapa de Lojas) e um título opcional
+- **Editar**: clique no lápis para mudar título, conteúdo, imagem, link e ativar/desativar
+- **Reordenar**: arraste os blocos e clique em "Salvar nova ordem"
+
+É a forma mais visual — a ordem listada é exatamente a ordem exibida na home.
+
+### 2. Páginas dinâmicas → Gerenciador de Páginas
+
+Painel → **Administração → Páginas** (`/dashboard/admin/pages`)
+
+- **Criar página**: informe um `slug` (ex: `promocoes`) e um título → ela fica disponível
+  em `/pagina/promocoes`
+- **Adicionar seção**: cada página pode ter várias seções; cada seção tem conteúdo editável
+  com editor WYSIWYG
+- **Editar/remover seções**: altere o texto ou exclua seções individualmente
+- **Menu**: para exibir a página no menu, vá em **Administração → Menu** e adicione um item
+  apontando para `/pagina/slug`
+
+### 3. Páginas fixas (estruturais) → código
+
+As páginas **Lojas**, **Sobre**, **Ofertas**, **Achados e Perdidos**, **Trabalhe conosco**
+e **Currículo** são views Blade em `resources/views/site/*.blade.php` e **não são editáveis
+pelo painel**. Para alterar o conteúdo é preciso editar o arquivo (ou usar "Aparência" para
+as cores e "Configurações" para telefone/redes sociais/apps).
+
+### Regra prática
+
+| Quero editar...                  | Onde fazer                             |
+|----------------------------------|----------------------------------------|
+| Seções da home                   | Painel → Blocos (Home)                 |
+| Página extra (ex: promocoes)     | Painel → Páginas + Menu                |
+| Cores e textos globais           | Painel → Aparência / Configurações     |
+| Conteúdo das páginas estruturais | Código (`resources/views/site/`)       |
+
 ## Comandos úteis
 
 ```bash
