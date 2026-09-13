@@ -79,6 +79,25 @@ php artisan ofertas:atualizar-status
 php artisan ofertas:gerar-thumbs
 ```
 
+## Agendamento (cron do Scheduler)
+
+O comando `ofertas:atualizar-status` roda automaticamente 1x/dia via agendador do Laravel
+(veja `routes/console.php`), desativando ofertas cuja `data_fim` já passou.
+
+Adicione no crontab do usuário do servidor (`crontab -e`):
+
+```bash
+* * * * * cd /caminho/para/site_medeiros/medeiros && php artisan schedule:run >> /dev/null 2>&1
+```
+
+O agendador do Laravel é chamado a cada minuto e dispara as tarefas programadas (o `daily` executa 1x/dia).
+
+Para validar sem esperar o horário agendado:
+
+```bash
+php artisan schedule:run
+```
+
 ## Créditos
 
 Desenvolvido por [Carlos Lima Dev](https://github.com/EduardoLima03)
