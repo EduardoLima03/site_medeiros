@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidatura;
+use App\Models\Curriculo;
 use App\Models\Oferta;
+use App\Models\Vaga;
 
 class DashboardController extends Controller
 {
@@ -15,19 +18,25 @@ class DashboardController extends Controller
         }
 
         if ($user->role === 'rh') {
-            $rhUrl = env('RH_SITE_URL', 'http://localhost:8001');
-            return redirect()->away($rhUrl . '/dashboard');
+            $vagasAbertas = Vaga::where('status', 'aberta')->count();
+            $totalCandidaturas = Candidatura::count();
+            $totalCurriculos = Curriculo::count();
+
+            return view('dashboard.rh.home', compact('vagasAbertas', 'totalCandidaturas', 'totalCurriculos'));
         }
 
         if ($user->role === 'marketing') {
             $ofertasAtivas = Oferta::where('ativa', true)->count();
             $totalOfertas = Oferta::count();
+
             return view('dashboard.marketing.home', compact('ofertasAtivas', 'totalOfertas'));
         }
 
         if ($user->role === 'client') {
-            $rhUrl = env('RH_SITE_URL', 'http://localhost:8001');
-            return redirect()->away($rhUrl . '/dashboard');
+            $candidaturas = Candidatura::where('user_id', $user->id)->with('vaga')->latest()->get();
+            $curriculo = Curriculo::where('user_id', $user->id)->latest()->first();
+
+            return view('dashboard.client.home', compact('candidaturas', 'curriculo'));
         }
 
         return redirect()->route('site.home');

@@ -1,23 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="py-5" style="background-color: var(--dark-green);">
+@php
+    $categorias = [
+        ['nome' => 'Hortifrúti', 'icon' => 'bi-egg-fried'],
+        ['nome' => 'Açougue', 'icon' => 'bi-tag'],
+        ['nome' => 'Padaria', 'icon' => 'bi-wheat'],
+    ];
+@endphp
+<section class="block-section" style="background: linear-gradient(120deg, var(--dark-green) 0%, var(--primary) 100%);">
+    <div class="container text-center text-white py-4">
+        <h1 class="fw-black" style="font-size: 2.6rem;">Nossas Lojas</h1>
+        <p style="opacity: 0.9; font-size: 1.1rem;">Encontre o Mercantil Medeiros mais perto de você</p>
+    </div>
+</section>
+
+<section class="block-section">
     <div class="container">
-        <h2 class="section-title mb-5">
-            <span style="font-weight: 300;">{{ str_replace('Nossas ', '', $contents['titulo']->content ?? 'Lojas') }} </span>
-            @if(str_starts_with($contents['titulo']->content ?? 'Nossas Lojas', 'Nossas '))Nossas Lojas @else {{ $contents['titulo']->content ?? 'Lojas' }} @endif
-        </h2>
-        <div class="row g-4 justify-content-center">
+        <div class="row g-4">
             @foreach($lojas as $loja)
-            <div class="col-md-6 col-lg-4 d-flex justify-content-center">
+            <div class="col-md-6 col-lg-4">
                 <div class="card-loja">
-                    <img src="{{ $loja['imagem'] }}" alt="{{ $loja['nome'] }}" style="width: 100%; height: 15rem; border-radius: 1.6rem; object-fit: cover;">
-                    <div class="text-white text-center" style="line-height: 1.6; font-size: 1.2rem;">
-                        <h5 class="fw-bold">{{ $loja['nome'] }}</h5>
-                        <p class="mb-1">{{ $loja['endereco'] }}</p>
-                        <p class="mb-0">{{ $loja['telefone'] }}</p>
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <i class="bi bi-shop loja-icon"></i>
+                        <h5 class="mb-0">{{ $loja['nome'] }}</h5>
                     </div>
-                    <a href="{{ $loja['maps'] }}" target="_blank" rel="noopener noreferrer" class="btn-card-store">Como chegar</a>
+                    <p><i class="bi bi-geo-alt me-1"></i>{{ $loja['endereco'] }}</p>
+                    <p><i class="bi bi-telephone me-1"></i>{{ $loja['telefone'] }}</p>
+                    <a href="{{ $loja['maps'] }}" target="_blank" rel="noopener" class="btn-card-store"><i class="bi bi-geo"></i> Como chegar</a>
                 </div>
             </div>
             @endforeach
@@ -25,40 +35,19 @@
     </div>
 </section>
 
-@php
-    $knownLojas = ['titulo'];
-    $extraGroups = [];
-    foreach ($contents as $section => $content) {
-        if (in_array($section, $knownLojas)) continue;
-        $prefix = $section; $type = 'texto';
-        if (str_contains($section, '_titulo')) { $prefix = substr($section, 0, strrpos($section, '_titulo')); $type = 'titulo'; }
-        elseif (str_contains($section, '_subtitulo')) { $prefix = substr($section, 0, strrpos($section, '_subtitulo')); $type = 'subtitulo'; }
-        elseif (str_contains($section, '_texto')) { $prefix = substr($section, 0, strrpos($section, '_texto')); $type = 'texto'; }
-        elseif (str_contains($section, '_imagem')) { $prefix = substr($section, 0, strrpos($section, '_imagem')); $type = 'imagem'; }
-        $extraGroups[$prefix][$type][] = $content;
-    }
-@endphp
-@foreach($extraGroups as $types)
-@php $hasImage = isset($types['imagem']); @endphp
-<section class="py-5" style="background-color: #f0f7f0;">
-    <div class="container"><div class="row align-items-center">
-        <div class="{{ $hasImage ? 'col-md-6' : 'col-md-6' }}">
-        @if(isset($types['titulo']))
-            @foreach($types['titulo'] as $c) <h2 class="mb-4" style="color: var(--text-green); font-weight: 700; font-size: 2rem;">{{ strip_tags($c->content) }}</h2> @endforeach
-        @endif
-        @if(isset($types['subtitulo']))
-            @foreach($types['subtitulo'] as $c) <h4 class="mb-3" style="color: var(--dark-green); font-weight: 600;">{{ strip_tags($c->content) }}</h4> @endforeach
-        @endif
-        @if(isset($types['texto']))
-            @foreach($types['texto'] as $c) {!! $c->content !!} @endforeach
-        @endif
+<section class="block-section light-bg">
+    <div class="container text-center">
+        <h2 class="section-title d-inline-block mb-4">Departamentos</h2>
+        <div class="row g-4 justify-content-center mt-2">
+            @foreach($categorias as $cat)
+            <div class="col-6 col-md-3">
+                <div class="card-moderno p-4 text-center">
+                    <i class="bi {{ $cat['icon'] }}" style="font-size: 2.6rem; color: var(--primary);"></i>
+                    <p class="fw-bold mt-3 mb-0" style="color: var(--dark-green);">{{ $cat['nome'] }}</p>
+                </div>
+            </div>
+            @endforeach
         </div>
-        @if($hasImage)
-        <div class="col-md-6 text-center">
-            @foreach($types['imagem'] as $c) <img src="{{ $c->content }}" class="img-fluid" style="max-width: 20rem;"> @endforeach
-        </div>
-        @endif
-    </div></div>
+    </div>
 </section>
-@endforeach
 @endsection

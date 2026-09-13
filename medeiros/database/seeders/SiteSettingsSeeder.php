@@ -17,6 +17,7 @@ class SiteSettingsSeeder extends Seeder
             ['key' => 'gold', 'value' => '#e5a000'],
             ['key' => 'site_name', 'value' => 'Mercantil Medeiros LTDA'],
             ['key' => 'site_description', 'value' => 'O supermercado da sua família'],
+            ['key' => 'telefone', 'value' => '(85) 3291-2233'],
             ['key' => 'phone_central', 'value' => '(85) 3291-2233'],
             ['key' => 'whatsapp', 'value' => 'https://whats.idsolucoesweb.com.br/v2/bot/medeiros/pagina'],
             ['key' => 'instagram', 'value' => 'https://www.instagram.com/medeirossupermercados/'],

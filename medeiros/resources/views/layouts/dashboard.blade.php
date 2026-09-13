@@ -55,6 +55,7 @@
                 <div class="sidebar-logo">
                     <img src="/images/logo.png" alt="Medeiros" height="45">
                 </div>
+                @php $role = auth()->user()->role; @endphp
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
@@ -62,34 +63,53 @@
                         </a>
                     </li>
 
-                    @if(in_array(auth()->user()->role, ['admin', 'rh']))
+                    @if(in_array($role, ['admin', 'rh']))
                     <li class="nav-item"><div class="nav-section">Recursos Humanos</div></li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ env('RH_SITE_URL', 'http://localhost:8001') }}/dashboard" target="_blank">
-                            <i class="bi bi-box-arrow-up-right"></i> RH (Sistema Separado)
+                        <a class="nav-link {{ request()->routeIs('rh.vagas*') ? 'active' : '' }}" href="{{ route('rh.vagas') }}">
+                            <i class="bi bi-briefcase"></i> Vagas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('rh.curriculos*') ? 'active' : '' }}" href="{{ route('rh.curriculos') }}">
+                            <i class="bi bi-file-earmark-person"></i> Currículos
                         </a>
                     </li>
                     @endif
 
-                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'marketing')
+                    @if(in_array($role, ['admin', 'marketing']))
                     <li class="nav-item"><div class="nav-section">Marketing</div></li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('marketing.*') ? 'active' : '' }}" href="{{ route('marketing.ofertas') }}">
+                        <a class="nav-link {{ request()->routeIs('marketing.ofertas*') ? 'active' : '' }}" href="{{ route('marketing.ofertas') }}">
                             <i class="bi bi-tag"></i> Ofertas
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('marketing.achados*') ? 'active' : '' }}" href="{{ route('marketing.achados') }}">
+                            <i class="bi bi-box-seam"></i> Achados e Perdidos
+                        </a>
+                    </li>
                     @endif
 
-                    @if(auth()->user()->role === 'admin')
-                    <li class="nav-item"><div class="nav-section">Administração</div></li>
+                    @if($role === 'client')
+                    <li class="nav-item"><div class="nav-section">Minha Área</div></li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.index') ? 'active' : '' }}" href="{{ route('admin.index') }}">
-                            <i class="bi bi-speedometer2"></i> Painel
+                        <a class="nav-link" href="{{ route('site.curriculo') }}">
+                            <i class="bi bi-file-earmark-person"></i> Meu Currículo
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.pages*') ? 'active' : '' }}" href="{{ route('admin.pages') }}">
-                            <i class="bi bi-file-earmark-text"></i> Páginas
+                        <a class="nav-link" href="{{ route('site.trabalhe') }}" target="_blank">
+                            <i class="bi bi-briefcase"></i> Ver Vagas
+                        </a>
+                    </li>
+                    @endif
+
+                    @if($role === 'admin')
+                    <li class="nav-item"><div class="nav-section">Administração</div></li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('admin.blocks*') ? 'active' : '' }}" href="{{ route('admin.blocks') }}">
+                            <i class="bi bi-grid-3x3-gap"></i> Blocos (Home)
                         </a>
                     </li>
                     <li class="nav-item">
@@ -105,11 +125,6 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.media*') ? 'active' : '' }}" href="{{ route('admin.media') }}">
                             <i class="bi bi-images"></i> Mídia
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.menu*') ? 'active' : '' }}" href="{{ route('admin.menu') }}">
-                            <i class="bi bi-list"></i> Menu
                         </a>
                     </li>
                     <li class="nav-item">

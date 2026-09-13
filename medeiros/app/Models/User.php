@@ -36,4 +36,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Oferta::class);
     }
+
+    public function achadosPerdidos()
+    {
+        return $this->hasMany(AchadoPerdido::class);
+    }
+
+    public function vagas()
+    {
+        return $this->hasMany(Vaga::class);
+    }
+
+    public function candidaturas()
+    {
+        return $this->hasMany(Candidatura::class);
+    }
+
+    public function curriculos()
+    {
+        return $this->hasMany(Curriculo::class);
+    }
 }
