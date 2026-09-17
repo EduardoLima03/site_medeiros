@@ -6,24 +6,6 @@
     $menuItems = json_decode(setting('nav_menu', '[]'), true);
 @endphp
 
-<div class="topbar">
-    <div class="container d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center gap-4">
-            @if(setting('telefone'))
-            <span><i class="bi bi-telephone icon"></i>{{ setting('telefone') }}</span>
-            @endif
-            <span><i class="bi bi-clock icon"></i>Seg a Sáb: 7h às 21h · Dom: 7h às 12h</span>
-        </div>
-        <div class="d-flex align-items-center gap-3">
-            @auth
-            <a href="{{ route('dashboard') }}"><i class="bi bi-person icon"></i>Painel</a>
-            @else
-            <a href="{{ route('login') }}"><i class="bi bi-person icon"></i>Entrar</a>
-            @endauth
-        </div>
-    </div>
-</div>
-
 <nav class="navbar navbar-expand-lg main-nav sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="{{ route('site.home') }}">
@@ -41,7 +23,6 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('site.home') }}">Início</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('site.ofertas') }}">Ofertas</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('site.achados') }}">Achados e Perdidos</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('site.lojas') }}">Lojas</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('site.sobre') }}">Sobre nós</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('site.trabalhe') }}">Trabalhe conosco</a></li>
                 @endforelse
