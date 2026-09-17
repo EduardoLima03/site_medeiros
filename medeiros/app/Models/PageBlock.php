@@ -12,6 +12,11 @@ class PageBlock extends Model
         'ativo' => 'boolean',
     ];
 
+    public function slides()
+    {
+        return $this->hasMany(PageBlockSlide::class)->orderBy('ordem');
+    }
+
     public function scopeDaPagina($query, $page)
     {
         return $query->where('page', $page);

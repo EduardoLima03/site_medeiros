@@ -3,6 +3,7 @@
 @php
 $blockTypes = [
     'banner'    => ['Hero / Banner', 'bi-image'],
+    'carrossel' => ['Carrossel de Imagens', 'bi-collection'],
     'texto'     => ['Texto / Parágrafo', 'bi-text-paragraph'],
     'imagem'    => ['Imagem', 'bi-image-fill'],
     'ofertas'   => ['Grid de Ofertas', 'bi-tag-fill'],

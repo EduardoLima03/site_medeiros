@@ -103,9 +103,18 @@
             border-radius: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
+        /* ===== Carrossel ===== */
+        .carrossel-block { position: relative; }
+        .carrossel-img {
+            width: 100%; height: 560px; object-fit: cover;
+        }
+        .carrossel-block .carousel-caption {
+            background: linear-gradient(0deg, rgba(21,42,10,0.75) 0%, transparent 100%);
+            left: 0; right: 0; bottom: 0; padding: 2rem 1rem 1.2rem;
+        }
+
         /* ===== Hero banner ===== */
-        .hero-block {
-            position: relative; min-height: 460px; display: flex; align-items: center;
+        .hero-block { position: relative; min-height: 460px; display: flex; align-items: center;
             background-size: cover; background-position: center; color: #fff;
         }
         .hero-block::before {
@@ -191,6 +200,7 @@
 
         @media (max-width: 768px) {
             .hero-block { min-height: 380px; }
+            .carrossel-img { height: 260px; }
             section.block-section { padding: 2.5rem 0; }
         }
     </style>

@@ -13,7 +13,7 @@ class SiteController extends Controller
 {
     public function home()
     {
-        $blocks = PageBlock::where('page', 'home')->ativos()->ordenados()->get();
+        $blocks = PageBlock::where('page', 'home')->with('slides')->ativos()->ordenados()->get();
         $ofertas = Oferta::vigentes()->latest()->take(8)->get();
         $achados = AchadoPerdido::disponiveis()->latest()->take(6)->get();
         $vagas = Vaga::where('status', 'aberta')->latest()->take(3)->get();

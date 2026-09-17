@@ -106,6 +106,13 @@ Route::middleware(['auth'])->prefix('/dashboard')->group(function () {
         Route::get('/blocos/{block}/editar', [PageBlockController::class, 'edit'])->name('blocks.edit');
         Route::put('/blocos/{block}', [PageBlockController::class, 'update'])->name('blocks.update');
         Route::delete('/blocos/{block}', [PageBlockController::class, 'destroy'])->name('blocks.destroy');
+
+        // Slides do carrossel
+        Route::post('/blocos/{block}/slides', [PageBlockController::class, 'storeSlide'])->name('blocks.slides.store');
+        Route::match(['post', 'put'], '/blocos/{block}/slides/reordenar', [PageBlockController::class, 'reorderSlides'])->name('blocks.slides.reorder');
+        Route::post('/blocos/{block}/slides/{slide}/mover', [PageBlockController::class, 'moveSlide'])->name('blocks.slides.move');
+        Route::put('/blocos/{block}/slides/{slide}', [PageBlockController::class, 'updateSlide'])->name('blocks.slides.update');
+        Route::delete('/blocos/{block}/slides/{slide}', [PageBlockController::class, 'destroySlide'])->name('blocks.slides.destroy');
     });
 });
 
