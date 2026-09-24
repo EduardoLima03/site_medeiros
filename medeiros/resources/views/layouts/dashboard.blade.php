@@ -84,11 +84,6 @@
                             <i class="bi bi-tag"></i> Ofertas
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('marketing.achados*') ? 'active' : '' }}" href="{{ route('marketing.achados') }}">
-                            <i class="bi bi-box-seam"></i> Achados e Perdidos
-                        </a>
-                    </li>
                     @endif
 
                     @if($role === 'client')

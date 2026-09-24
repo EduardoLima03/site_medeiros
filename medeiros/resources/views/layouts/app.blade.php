@@ -164,12 +164,6 @@
             padding: 0.3rem 0.8rem; border-radius: 1rem; align-self: flex-start; text-transform: uppercase;
         }
 
-        /* ===== Achados ===== */
-        .achado-imagem-vazia {
-            height: 200px; display: flex; align-items: center; justify-content: center;
-            background: var(--light-green); color: #b8cfae; font-size: 3rem;
-        }
-
         /* ===== CTA app ===== */
         .cta-app {
             background: var(--dark-green); color: #fff; border-radius: 2rem;

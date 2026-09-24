@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AchadoPerdidoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CurriculoController;
@@ -17,7 +16,6 @@ Route::get('/', [SiteController::class, 'home'])->name('site.home');
 Route::get('/lojas', [SiteController::class, 'lojas'])->name('site.lojas');
 Route::get('/sobre', [SiteController::class, 'sobre'])->name('site.sobre');
 Route::get('/ofertas', [SiteController::class, 'ofertas'])->name('site.ofertas');
-Route::get('/achados-perdidos', [SiteController::class, 'achados'])->name('site.achados');
 Route::get('/trabalhe-conosco', [SiteController::class, 'trabalhe'])->name('site.trabalhe');
 Route::redirect('/trabalhe_conosco', '/trabalhe-conosco', 301);
 
@@ -50,13 +48,6 @@ Route::middleware(['auth'])->prefix('/dashboard')->group(function () {
         Route::get('/ofertas/{oferta}/editar', [OfertaController::class, 'edit'])->name('ofertas.edit');
         Route::put('/ofertas/{oferta}', [OfertaController::class, 'update'])->name('ofertas.update');
         Route::delete('/ofertas/{oferta}', [OfertaController::class, 'destroy'])->name('ofertas.destroy');
-
-        Route::get('/achados', [AchadoPerdidoController::class, 'index'])->name('achados');
-        Route::get('/achados/criar', [AchadoPerdidoController::class, 'create'])->name('achados.create');
-        Route::post('/achados', [AchadoPerdidoController::class, 'store'])->name('achados.store');
-        Route::get('/achados/{achado}/editar', [AchadoPerdidoController::class, 'edit'])->name('achados.edit');
-        Route::put('/achados/{achado}', [AchadoPerdidoController::class, 'update'])->name('achados.update');
-        Route::delete('/achados/{achado}', [AchadoPerdidoController::class, 'destroy'])->name('achados.destroy');
     });
 
     // RH
@@ -102,6 +93,7 @@ Route::middleware(['auth'])->prefix('/dashboard')->group(function () {
         // Blocos de conteúdo (edição visual)
         Route::get('/blocos', [PageBlockController::class, 'index'])->name('blocks');
         Route::post('/blocos', [PageBlockController::class, 'store'])->name('blocks.store');
+        Route::get('/blocos/reordenar', fn () => redirect()->route('admin.blocks'));
         Route::match(['post', 'put'], '/blocos/reordenar', [PageBlockController::class, 'reorder'])->name('blocks.reorder');
         Route::get('/blocos/{block}/editar', [PageBlockController::class, 'edit'])->name('blocks.edit');
         Route::put('/blocos/{block}', [PageBlockController::class, 'update'])->name('blocks.update');
@@ -109,6 +101,7 @@ Route::middleware(['auth'])->prefix('/dashboard')->group(function () {
 
         // Slides do carrossel
         Route::post('/blocos/{block}/slides', [PageBlockController::class, 'storeSlide'])->name('blocks.slides.store');
+        Route::get('/blocos/{block}/slides/reordenar', fn () => redirect()->route('admin.blocks.edit', request()->route('block')));
         Route::match(['post', 'put'], '/blocos/{block}/slides/reordenar', [PageBlockController::class, 'reorderSlides'])->name('blocks.slides.reorder');
         Route::post('/blocos/{block}/slides/{slide}/mover', [PageBlockController::class, 'moveSlide'])->name('blocks.slides.move');
         Route::put('/blocos/{block}/slides/{slide}', [PageBlockController::class, 'updateSlide'])->name('blocks.slides.update');

@@ -26,11 +26,6 @@ class PageBlocksSeeder extends Seeder
                 'conteudo' => 'Corra e aproveite os melhores preços.',
             ],
             [
-                'type' => 'achados',
-                'titulo' => 'ACHADOS E PERDIDOS',
-                'conteudo' => 'Perdeu algo em nossas lojas? Confira aqui.',
-            ],
-            [
                 'type' => 'mapa',
                 'titulo' => 'NOSSAS LOJAS',
                 'conteudo' => 'Venha nos visitar, estamos pertinho de você.',

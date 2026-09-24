@@ -22,7 +22,6 @@
                 @empty
                 <li class="nav-item"><a class="nav-link" href="{{ route('site.home') }}">Início</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('site.ofertas') }}">Ofertas</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('site.achados') }}">Achados e Perdidos</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('site.sobre') }}">Sobre nós</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('site.trabalhe') }}">Trabalhe conosco</a></li>
                 @endforelse

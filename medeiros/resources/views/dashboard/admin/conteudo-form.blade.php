@@ -7,7 +7,6 @@ $blockTypes = [
     'texto'     => 'Texto',
     'imagem'    => 'Imagem',
     'ofertas'   => 'Grid de Ofertas',
-    'achados'   => 'Achados e Perdidos',
     'vagas'     => 'Vagas Abertas',
     'cta_app'   => 'CTA App',
     'mapa'      => 'Mapa de Lojas',

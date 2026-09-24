@@ -13,8 +13,11 @@
                         <h5 class="mb-0">{{ $loja['nome'] }}</h5>
                     </div>
                     <p><i class="bi bi-geo-alt me-1"></i>{{ $loja['endereco'] }}</p>
-                    <p><i class="bi bi-telephone me-1"></i>{{ $loja['telefone'] }}</p>
+                    <a href="tel:{{ preg_replace('/\D/', '', $loja['telefone']) }}" class="btn-card-store mb-2"><i class="bi bi-telephone"></i> {{ $loja['telefone'] }}</a>
                     <a href="{{ $loja['maps'] }}" target="_blank" rel="noopener" class="btn-card-store"><i class="bi bi-geo"></i> Como chegar</a>
+                    @if(!empty($loja['compra']))
+                    <a href="{{ $loja['compra'] }}" target="_blank" rel="noopener" class="btn-card-store mt-2" style="background: var(--primary);"><i class="bi bi-bag"></i> Comprar online</a>
+                    @endif
                 </div>
             </div>
             @endforeach

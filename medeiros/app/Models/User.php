@@ -37,11 +37,6 @@ class User extends Authenticatable
         return $this->hasMany(Oferta::class);
     }
 
-    public function achadosPerdidos()
-    {
-        return $this->hasMany(AchadoPerdido::class);
-    }
-
     public function vagas()
     {
         return $this->hasMany(Vaga::class);

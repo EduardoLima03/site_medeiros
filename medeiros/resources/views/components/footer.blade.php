@@ -21,7 +21,6 @@
                 <h5>Navegação</h5>
                 <a href="{{ route('site.home') }}">Início</a><br>
                 <a href="{{ route('site.ofertas') }}">Ofertas</a><br>
-                <a href="{{ route('site.achados') }}">Achados e Perdidos</a><br>
                 <a href="{{ route('site.lojas') }}">Nossas Lojas</a><br>
                 <a href="{{ route('site.sobre') }}">Sobre nós</a><br>
                 <a href="{{ route('site.trabalhe') }}">Trabalhe conosco</a><br>
@@ -44,7 +43,7 @@
         <div class="container d-flex flex-wrap justify-content-between align-items-center">
             <span>&copy; {{ date('Y') }} {{ $siteName }}. Todos os direitos reservados.</span>
             <span>CNPJ 63.563.647/0001-41</span>
-            <span>Desenvolvido com <i class="bi bi-heart-fill" style="color: var(--gold);"></i></span>
+            <a href= "https://github.com/EduardoLima03" target="_blank"><span>Desenvolvido com <i class="bi bi-heart-fill" style="color: var(--gold);"></i> CL Dev</span></a>
         </div>
     </div>
 </footer>
