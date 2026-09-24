@@ -6,7 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="{{ setting('meta_description', 'Mercantil Medeiros - Supermercados em Fortaleza e Pacatuba') }}">
     <title>{{ setting('site_name', 'Mercantil Medeiros LTDA') }}</title>
+    <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
@@ -170,10 +172,13 @@
             padding: 3rem; position: relative; overflow: hidden;
         }
         .cta-app h3 { font-weight: 900; }
+        .cta-app .app-links {
+            display: flex; flex-wrap: wrap; gap: 1.25rem;
+        }
         .cta-app .app-links a {
             display: inline-flex; align-items: center; gap: 0.5rem; background: #fff;
             color: var(--dark-green); font-weight: 700; text-decoration: none;
-            padding: 0.75rem 1.4rem; border-radius: 1rem; margin-right: 0.6rem;
+            padding: 0.75rem 1.4rem; border-radius: 1rem;
         }
 
         /* ===== Footer ===== */

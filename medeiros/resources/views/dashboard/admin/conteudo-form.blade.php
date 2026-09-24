@@ -10,6 +10,7 @@ $blockTypes = [
     'vagas'     => 'Vagas Abertas',
     'cta_app'   => 'CTA App',
     'mapa'      => 'Mapa de Lojas',
+    'promo_app' => 'Promoções do App',
 ];
 @endphp
 

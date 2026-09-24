@@ -17,8 +17,11 @@ class SiteController extends Controller
         $vagas = Vaga::where('status', 'aberta')->latest()->take(3)->get();
         $settings = SiteSetting::pluck('value', 'key');
         $lojas = $this->lojasLista();
+        $promocoes = $blocks->contains('type', 'promo_app')
+            ? app(\App\Services\PromocoesAppService::class)->obter()
+            : [];
 
-        return view('site.home', compact('blocks', 'ofertas', 'vagas', 'settings', 'lojas'));
+        return view('site.home', compact('blocks', 'ofertas', 'vagas', 'settings', 'lojas', 'promocoes'));
     }
 
     public function lojas()

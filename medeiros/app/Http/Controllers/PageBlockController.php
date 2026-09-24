@@ -18,7 +18,7 @@ class PageBlockController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'type' => 'required|in:banner,texto,imagem,carrossel,ofertas,vagas,cta_app,mapa',
+            'type' => 'required|in:banner,texto,imagem,carrossel,ofertas,vagas,cta_app,mapa,promo_app',
             'titulo' => 'nullable|string|max:255',
             'conteudo' => 'nullable|string',
         ]);
