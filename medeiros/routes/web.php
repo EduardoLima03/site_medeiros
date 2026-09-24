@@ -36,8 +36,12 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Dashboard
-Route::middleware(['auth'])->prefix('/dashboard')->group(function () {
+Route::middleware(['auth', \Illuminate\Session\Middleware\AuthenticateSession::class])->prefix('/dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Alterar senha
+    Route::get('/senha', [AuthController::class, 'changePassword'])->name('dashboard.senha');
+    Route::put('/senha', [AuthController::class, 'updatePassword'])->name('dashboard.senha.update');
 
     // Marketing
     Route::middleware('role:marketing,admin')->prefix('/marketing')->name('marketing.')->group(function () {

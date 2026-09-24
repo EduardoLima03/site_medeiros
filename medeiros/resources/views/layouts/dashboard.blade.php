@@ -130,6 +130,11 @@
                     @endif
                 </ul>
                 <hr class="text-light">
+                <div class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('dashboard.senha*') ? 'active' : '' }}" href="{{ route('dashboard.senha') }}">
+                        <i class="bi bi-key"></i> Alterar Senha
+                    </a>
+                </div>
                 <div class="text-center px-3">
                     <span class="badge-role badge bg-{{ auth()->user()->role === 'admin' ? 'danger' : (auth()->user()->role === 'rh' ? 'primary' : (auth()->user()->role === 'marketing' ? 'success' : 'secondary')) }} text-white text-uppercase">{{ auth()->user()->role }}</span>
                     <div class="mt-2">

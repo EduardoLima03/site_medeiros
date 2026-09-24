@@ -30,16 +30,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="mt-4 p-3 rounded-4" style="background: #f0f7f0;">
-                <p class="mb-2 small fw-semibold">Credenciais de teste:</p>
-                <ul class="small mb-0">
-                    <li><strong>Admin:</strong> admin@medeiros.com.br / 123456</li>
-                    <li><strong>RH:</strong> rh@medeiros.com.br / 123456</li>
-                    <li><strong>Marketing:</strong> marketing@medeiros.com.br / 123456</li>
-                    <li><strong>Cliente:</strong> cliente@teste.com / 123456</li>
-                </ul>
-            </div>
         </div>
     </div>
 </div>
