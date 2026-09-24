@@ -4,19 +4,19 @@ Aplicação Laravel unificada do site institucional do Supermercado Medeiros: si
 
 ```
 site_medeiros/
-└── medeiros/        # Laravel — Site público + Ofertas + Achados + RH + Admin
+└── medeiros/        # Laravel — Site público + Ofertas + RH + Admin
 ```
 
 ## Funcionalidades
 
-- **Site público**: home com blocos editáveis (hero, texto, imagem, ofertas, achados, vagas, lojas, CTA app), páginas de lojas, sobre, ofertas da semana, achados e perdidos, trabalhe conosco e páginas dinâmicas
+- **Site público**: home com blocos editáveis (banner, carrossel, texto, imagem, ofertas, vagas, lojas, CTA app e promoções do app), páginas de lojas, sobre, ofertas da semana, trabalhe conosco e páginas dinâmicas
 - **Painéis**:
-  - `admin` — gerenciar blocos da home (adicionar/reordenar/editar), cores e textos, configurações, mídia e usuários
+  - `admin` — gerenciar blocos da home (adicionar/reordenar/editar + slides do carrossel), cores e textos, configurações, menu, mídia e usuários
   - `rh` / `admin` — CRUD de vagas, gerenciamento de candidaturas e visualização/impressão de currículos
-  - `marketing` / `admin` — gerenciar ofertas (imagem ou PDF) com vigência e itens de achados e perdidos
+  - `marketing` / `admin` — gerenciar ofertas (imagem ou PDF) com vigência
   - `client` — inscrição em vagas e cadastro de currículo (minha área com status das candidaturas)
 - **Ofertas**: upload de imagem ou PDF; PDFs geram thumbnail automático da 1ª página
-- **Achados e Perdidos**: cadastro pelo marketing/admin com foto, local e data; itens entregues somem do portal
+- **Promoções do App**: bloco da home que busca automaticamente as promoções publicadas no aplicativo do supermercado (Instabuy) e exibe na home
 - **Currículos**: formulário detalhado com upload de PDF e extração de texto via `smalot/pdfparser`
 - **Candidaturas**: fluxo candidatado → analisando → selecionado_entrevista / recusado
 
@@ -77,10 +77,14 @@ Existem **3 formas** de criar/editar conteúdo, conforme o tipo de página:
 
 Painel → **Administração → Blocos (Home)** (`/dashboard/admin/blocos`)
 
-- **Adicionar bloco**: escolha o tipo (Banner/Hero, Texto, Imagem, Grid de Ofertas,
-  Achados e Perdidos, Vagas, CTA App, Mapa de Lojas) e um título opcional
+- **Adicionar bloco**: escolha o tipo (Banner/Hero, Carrossel de Imagens, Texto, Imagem,
+  Grid de Ofertas, Vagas, CTA App, Mapa de Lojas ou Promoções do App) e um título opcional
 - **Editar**: clique no lápis para mudar título, conteúdo, imagem, link e ativar/desativar
 - **Reordenar**: arraste os blocos e clique em "Salvar nova ordem"
+- **Carrossel**: após adicionar o bloco, clique em editar para enviar imagens, definir títulos/links
+  e reordenar os slides
+- **Promoções do App**: bloco automático — exibe até 5 itens buscados no app do Medeiros
+  (resultado fica em cache por 1h); sem promoções disponíveis, mostra um link para o app
 
 É a forma mais visual — a ordem listada é exatamente a ordem exibida na home.
 
@@ -98,8 +102,8 @@ Painel → **Administração → Páginas** (`/dashboard/admin/pages`)
 
 ### 3. Páginas fixas (estruturais) → código
 
-As páginas **Lojas**, **Sobre**, **Ofertas**, **Achados e Perdidos**, **Trabalhe conosco**
-e **Currículo** são views Blade em `resources/views/site/*.blade.php` e **não são editáveis
+As páginas **Lojas**, **Sobre**, **Ofertas**, **Trabalhe conosco** e **Currículo**
+são views Blade em `resources/views/site/*.blade.php` e **não são editáveis
 pelo painel**. Para alterar o conteúdo é preciso editar o arquivo (ou usar "Aparência" para
 as cores e "Configurações" para telefone/redes sociais/apps).
 
