@@ -3,13 +3,14 @@
 @php
 $blockTypes = [
     'banner'    => ['Hero / Banner', 'bi-image'],
+    'carrossel' => ['Carrossel de Imagens', 'bi-collection'],
     'texto'     => ['Texto / Parágrafo', 'bi-text-paragraph'],
     'imagem'    => ['Imagem', 'bi-image-fill'],
     'ofertas'   => ['Grid de Ofertas', 'bi-tag-fill'],
-    'achados'   => ['Achados e Perdidos', 'bi-box-seam'],
     'vagas'     => ['Vagas Abertas', 'bi-briefcase-fill'],
     'cta_app'   => ['CTA App', 'bi-phone-fill'],
     'mapa'      => ['Mapa de Lojas', 'bi-geo-alt-fill'],
+    'promo_app' => ['Promoções do App', 'bi-megaphone-fill'],
 ];
 @endphp
 
@@ -82,10 +83,7 @@ $blockTypes = [
                         {{ $block->ativo ? 'Ativo' : 'Inativo' }}
                     </span>
                     <a href="{{ route('admin.blocks.edit', $block->id) }}" class="btn btn-sm btn-outline-primary" title="Editar"><i class="bi bi-pencil"></i></a>
-                    <form action="{{ route('admin.blocks.destroy', $block->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Remover este bloco?')">
-                        @csrf @method('DELETE')
-                        <button class="btn btn-sm btn-outline-danger" title="Remover"><i class="bi bi-trash"></i></button>
-                    </form>
+                    <button form="destroyForm-{{ $block->id }}" class="btn btn-sm btn-outline-danger" title="Remover"><i class="bi bi-trash"></i></button>
                 </div>
             </div>
         </div>
@@ -99,6 +97,14 @@ $blockTypes = [
         @endforelse
     </div>
 </form>
+
+{{-- Formulários de exclusão fora do form de reordenar (HTML não permite forms aninhados) --}}
+@foreach($blocks as $block)
+<form action="{{ route('admin.blocks.destroy', $block->id) }}" method="POST" id="destroyForm-{{ $block->id }}" onsubmit="return confirm('Remover este bloco?')">
+    @csrf
+    @method('DELETE')
+</form>
+@endforeach
 
 @push('scripts')
 <script>

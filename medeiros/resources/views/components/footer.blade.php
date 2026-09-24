@@ -21,23 +21,29 @@
                 <h5>Navegação</h5>
                 <a href="{{ route('site.home') }}">Início</a><br>
                 <a href="{{ route('site.ofertas') }}">Ofertas</a><br>
-                <a href="{{ route('site.achados') }}">Achados e Perdidos</a><br>
                 <a href="{{ route('site.lojas') }}">Nossas Lojas</a><br>
                 <a href="{{ route('site.sobre') }}">Sobre nós</a><br>
-                <a href="{{ route('site.trabalhe') }}">Trabalhe conosco</a>
+                <a href="{{ route('site.trabalhe') }}">Trabalhe conosco</a><br>
+                @auth
+                <a href="{{ route('dashboard') }}"><i class="bi bi-person me-1"></i>Acesso ao Painel</a>
+                @else
+                <a href="{{ route('login') }}"><i class="bi bi-person me-1"></i>Acesso ao Painel</a>
+                @endauth
             </div>
             <div class="col-lg-4 footer-col">
                 <h5>Contato</h5>
                 @if(setting('telefone'))<a href="tel:{{ preg_replace('/\D/', '', setting('telefone')) }}"><i class="bi bi-telephone me-2"></i>{{ setting('telefone') }}</a><br>@endif
                 @if($whatsapp != '#')<a href="{{ $whatsapp }}" target="_blank"><i class="bi bi-whatsapp me-2"></i>WhatsApp</a><br>@endif
-                <a href="{{ route('site.lojas') }}"><i class="bi bi-geo-alt me-2"></i>Fortaleza - CE</a>
+                <a href="{{ route('site.lojas') }}"><i class="bi bi-geo-alt me-2"></i>Fortaleza - CE</a><br>
+                <span><i class="bi bi-clock me-2"></i>Seg a Sáb: 7h às 21h · Dom: 7h às 12h</span>
             </div>
         </div>
     </div>
     <div class="footer-bottom">
         <div class="container d-flex flex-wrap justify-content-between align-items-center">
             <span>&copy; {{ date('Y') }} {{ $siteName }}. Todos os direitos reservados.</span>
-            <span>Desenvolvido com <i class="bi bi-heart-fill" style="color: var(--gold);"></i></span>
+            <span>CNPJ 63.563.647/0001-41</span>
+            <a href= "https://github.com/EduardoLima03" target="_blank"><span>Desenvolvido com <i class="bi bi-heart-fill" style="color: var(--gold);"></i> CL Dev</span></a>
         </div>
     </div>
 </footer>

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AchadoPerdido;
 use App\Models\Oferta;
 use App\Models\PageBlock;
 use App\Models\PageContent;
@@ -13,14 +12,16 @@ class SiteController extends Controller
 {
     public function home()
     {
-        $blocks = PageBlock::where('page', 'home')->ativos()->ordenados()->get();
+        $blocks = PageBlock::where('page', 'home')->with('slides')->ativos()->ordenados()->get();
         $ofertas = Oferta::vigentes()->latest()->take(8)->get();
-        $achados = AchadoPerdido::disponiveis()->latest()->take(6)->get();
         $vagas = Vaga::where('status', 'aberta')->latest()->take(3)->get();
         $settings = SiteSetting::pluck('value', 'key');
         $lojas = $this->lojasLista();
+        $promocoes = $blocks->contains('type', 'promo_app')
+            ? app(\App\Services\PromocoesAppService::class)->obter()
+            : [];
 
-        return view('site.home', compact('blocks', 'ofertas', 'achados', 'vagas', 'settings', 'lojas'));
+        return view('site.home', compact('blocks', 'ofertas', 'vagas', 'settings', 'lojas', 'promocoes'));
     }
 
     public function lojas()
@@ -46,14 +47,6 @@ class SiteController extends Controller
         return view('site.ofertas', compact('settings', 'ofertas'));
     }
 
-    public function achados()
-    {
-        $settings = SiteSetting::pluck('value', 'key');
-        $achados = AchadoPerdido::disponiveis()->latest()->get();
-
-        return view('site.achados', compact('settings', 'achados'));
-    }
-
     public function trabalhe()
     {
         $settings = SiteSetting::pluck('value', 'key');
@@ -76,11 +69,11 @@ class SiteController extends Controller
     private function lojasLista(): array
     {
         return [
-            ['nome' => 'Loja 1 - Pref. José Walter', 'endereco' => 'Av. J, 130 - Pref. José Walter, Fortaleza - CE', 'telefone' => '(85) 9 9159-2951', 'maps' => 'https://maps.app.goo.gl/6ABSApyN1iz8Sngn9', 'imagem' => '/images/loja_01.jpg'],
-            ['nome' => 'Loja 2 - Pref. José Walter', 'endereco' => 'Av. I, 1313 - Pref. José Walter, Fortaleza - CE', 'telefone' => '(85) 9 9158-8829', 'maps' => 'https://maps.app.goo.gl/juu4Up2YDXJQRAaQ8', 'imagem' => '/images/loja_02.jpg'],
-            ['nome' => 'Loja 3 - Pacatuba', 'endereco' => 'Av. XX, n 230 - Cj - Jereissati II, Pacatuba - CE', 'telefone' => '(85) 9 8166-0326', 'maps' => 'https://maps.app.goo.gl/wk2upoHmCNjz8XgJ8', 'imagem' => '/images/loja_03.jpeg'],
-            ['nome' => 'Loja 4 - Siqueira', 'endereco' => 'R. Gen. Rabelo, 447 - Siqueira, Fortaleza - CE', 'telefone' => '(85) 9 8192-2785', 'maps' => 'https://maps.app.goo.gl/ku4fR96rSrr2sRwk6', 'imagem' => '/images/loja_04.jpeg'],
-            ['nome' => 'Loja 5 - Conj. Palmeiras', 'endereco' => 'R. Evaldo Braga, 821 - Conj. Palmeiras, Fortaleza - CE, 60870-210', 'telefone' => '(85) 9 8694-0174', 'maps' => 'https://maps.app.goo.gl/4DecPGGyjJ4HbHwr6', 'imagem' => '/images/loja_05.jpeg'],
+            ['nome' => 'Loja 1 - Pref. José Walter', 'endereco' => 'Av. J, 130 - Pref. José Walter, Fortaleza - CE', 'telefone' => '(85) 9 9159-2951', 'maps' => 'https://maps.app.goo.gl/6ABSApyN1iz8Sngn9', 'imagem' => '/images/loja_01.jpg', 'compra' => null],
+            ['nome' => 'Loja 2 - Pref. José Walter', 'endereco' => 'Av. I, 1313 - Pref. José Walter, Fortaleza - CE', 'telefone' => '(85) 9 9158-8829', 'maps' => 'https://maps.app.goo.gl/juu4Up2YDXJQRAaQ8', 'imagem' => '/images/loja_02.jpg', 'compra' => 'https://www.app.medeirossupermercado.cloud/'],
+            ['nome' => 'Loja 3 - Pacatuba', 'endereco' => 'Av. XX, n 230 - Cj - Jereissati II, Pacatuba - CE', 'telefone' => '(85) 9 8166-0326', 'maps' => 'https://maps.app.goo.gl/wk2upoHmCNjz8XgJ8', 'imagem' => '/images/loja_03.jpeg', 'compra' => 'https://www.app.pacatuba.medeirossupermercado.cloud/'],
+            ['nome' => 'Loja 4 - Siqueira', 'endereco' => 'R. Gen. Rabelo, 447 - Siqueira, Fortaleza - CE', 'telefone' => '(85) 9 8192-2785', 'maps' => 'https://maps.app.goo.gl/ku4fR96rSrr2sRwk6', 'imagem' => '/images/loja_04.jpeg', 'compra' => 'https://www.app.siqueira.medeirossupermercado.cloud/'],
+            ['nome' => 'Loja 5 - Conj. Palmeiras', 'endereco' => 'R. Evaldo Braga, 821 - Conj. Palmeiras, Fortaleza - CE, 60870-210', 'telefone' => '(85) 9 8694-0174', 'maps' => 'https://maps.app.goo.gl/4DecPGGyjJ4HbHwr6', 'imagem' => '/images/loja_05.jpeg', 'compra' => null],
         ];
     }
 }

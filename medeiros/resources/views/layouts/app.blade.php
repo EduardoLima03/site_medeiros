@@ -6,7 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="{{ setting('meta_description', 'Mercantil Medeiros - Supermercados em Fortaleza e Pacatuba') }}">
     <title>{{ setting('site_name', 'Mercantil Medeiros LTDA') }}</title>
+    <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
@@ -103,9 +105,18 @@
             border-radius: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
+        /* ===== Carrossel ===== */
+        .carrossel-block { position: relative; }
+        .carrossel-img {
+            width: 100%; height: 560px; object-fit: cover;
+        }
+        .carrossel-block .carousel-caption {
+            background: linear-gradient(0deg, rgba(21,42,10,0.75) 0%, transparent 100%);
+            left: 0; right: 0; bottom: 0; padding: 2rem 1rem 1.2rem;
+        }
+
         /* ===== Hero banner ===== */
-        .hero-block {
-            position: relative; min-height: 460px; display: flex; align-items: center;
+        .hero-block { position: relative; min-height: 460px; display: flex; align-items: center;
             background-size: cover; background-position: center; color: #fff;
         }
         .hero-block::before {
@@ -155,22 +166,19 @@
             padding: 0.3rem 0.8rem; border-radius: 1rem; align-self: flex-start; text-transform: uppercase;
         }
 
-        /* ===== Achados ===== */
-        .achado-imagem-vazia {
-            height: 200px; display: flex; align-items: center; justify-content: center;
-            background: var(--light-green); color: #b8cfae; font-size: 3rem;
-        }
-
         /* ===== CTA app ===== */
         .cta-app {
             background: var(--dark-green); color: #fff; border-radius: 2rem;
             padding: 3rem; position: relative; overflow: hidden;
         }
         .cta-app h3 { font-weight: 900; }
+        .cta-app .app-links {
+            display: flex; flex-wrap: wrap; gap: 1.25rem;
+        }
         .cta-app .app-links a {
             display: inline-flex; align-items: center; gap: 0.5rem; background: #fff;
             color: var(--dark-green); font-weight: 700; text-decoration: none;
-            padding: 0.75rem 1.4rem; border-radius: 1rem; margin-right: 0.6rem;
+            padding: 0.75rem 1.4rem; border-radius: 1rem;
         }
 
         /* ===== Footer ===== */
@@ -191,6 +199,7 @@
 
         @media (max-width: 768px) {
             .hero-block { min-height: 380px; }
+            .carrossel-img { height: 260px; }
             section.block-section { padding: 2.5rem 0; }
         }
     </style>
