@@ -26,7 +26,8 @@ class DashboardController extends Controller
         }
 
         if ($user->role === 'marketing') {
-            $ofertasAtivas = Oferta::where('ativa', true)->count();
+            Oferta::vencidas()->update(['ativa' => false]);
+            $ofertasAtivas = Oferta::vigentes()->count();
             $totalOfertas = Oferta::count();
 
             return view('dashboard.marketing.home', compact('ofertasAtivas', 'totalOfertas'));

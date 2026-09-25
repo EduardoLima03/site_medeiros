@@ -169,6 +169,45 @@ class AdminController extends Controller
         return view('dashboard.admin.users', compact('users'));
     }
 
+    public function storeUser(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'telefone' => 'nullable|string|max:20',
+            'role' => 'required|in:rh,marketing,client',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        \App\Models\User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'telefone' => $data['telefone'] ?? null,
+            'role' => $data['role'],
+            'password' => $data['password'],
+        ]);
+
+        return redirect()->route('admin.users')->with('success', 'Usuário criado!');
+    }
+
+    public function destroyUser(\App\Models\User $user)
+    {
+        abort_if($user->id === auth()->id(), 422, 'Você não pode excluir o próprio usuário.');
+
+        $user->delete();
+
+        return redirect()->route('admin.users')->with('success', 'Usuário excluído!');
+    }
+
+    public function updateUserPassword(Request $request, \App\Models\User $user)
+    {
+        $data = $request->validate(['password' => 'required|confirmed|min:8']);
+
+        $user->update(['password' => $data['password']]);
+
+        return redirect()->route('admin.users')->with('success', "Senha de '{$user->name}' alterada!");
+    }
+
     public function updateUserRole(Request $request, \App\Models\User $user)
     {
         $data = $request->validate(['role' => 'required|in:rh,marketing,client']);

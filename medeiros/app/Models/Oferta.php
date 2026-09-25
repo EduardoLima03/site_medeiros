@@ -27,9 +27,22 @@ class Oferta extends Model
     public function scopeVigentes($query)
     {
         $hoje = now()->format('Y-m-d');
+
         return $query->where('ativa', true)
+            ->where(function ($q) use ($hoje) {
+                $q->whereNull('data_inicio')->orWhere('data_inicio', '<=', $hoje);
+            })
             ->where(function ($q) use ($hoje) {
                 $q->whereNull('data_fim')->orWhere('data_fim', '>=', $hoje);
             });
+    }
+
+    public function scopeVencidas($query)
+    {
+        $hoje = now()->format('Y-m-d');
+
+        return $query->where('ativa', true)
+            ->whereNotNull('data_fim')
+            ->where('data_fim', '<', $hoje);
     }
 }

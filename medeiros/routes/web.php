@@ -86,7 +86,10 @@ Route::middleware(['auth', \Illuminate\Session\Middleware\AuthenticateSession::c
         Route::delete('/menu/{index}', [AdminController::class, 'removeMenuItem'])->name('menu.remove');
         Route::post('/menu/mover/{index}', [AdminController::class, 'moveMenuItem'])->name('menu.mover');
         Route::get('/users', [AdminController::class, 'users'])->name('users');
+        Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
         Route::put('/users/{user}/role', [AdminController::class, 'updateUserRole'])->name('users.role');
+        Route::put('/users/{user}/senha', [AdminController::class, 'updateUserPassword'])->name('users.senha');
+        Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('users.destroy');
         Route::get('/content-json', [AdminController::class, 'getContentJson'])->name('content.json');
         Route::get('/media', [MediaController::class, 'index'])->name('media');
         Route::post('/media/upload', [MediaController::class, 'upload'])->name('media.upload');

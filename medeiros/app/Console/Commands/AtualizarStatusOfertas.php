@@ -8,15 +8,20 @@ use Illuminate\Console\Command;
 class AtualizarStatusOfertas extends Command
 {
     protected $signature = 'ofertas:atualizar-status';
-    protected $description = 'Desativa ofertas cuja data_fim já passou';
+    protected $description = 'Desativa ofertas vencidas (data_fim anterior a hoje) e informa as agendadas';
 
     public function handle()
     {
         $hoje = now()->format('Y-m-d');
-        $desativadas = Oferta::where('data_fim', '<', $hoje)
-            ->where('ativa', true)
-            ->update(['ativa' => false]);
+
+        $desativadas = Oferta::vencidas()->update(['ativa' => false]);
+
+        $futuras = Oferta::ativas()
+            ->whereNotNull('data_inicio')
+            ->where('data_inicio', '>', $hoje)
+            ->count();
 
         $this->info("{$desativadas} oferta(s) desativada(s) por data de vigência expirada.");
+        $this->info("{$futuras} oferta(s) aguardando a data de início (não exibidas no site).");
     }
 }

@@ -10,8 +10,12 @@
 <div class="row g-3">
     @foreach($ofertas as $oferta)
     @php
-        $expirada = $oferta->data_fim && $oferta->data_fim->isPast();
-        $vigente = $oferta->ativa && !$expirada;
+        $hoje = now()->startOfDay();
+        $expirada = $oferta->data_fim && $oferta->data_fim->lt($hoje);
+        $agendada = $oferta->data_inicio && $oferta->data_inicio->gt($hoje);
+        $vigente = $oferta->ativa && !$agendada && !$expirada;
+        $status = $vigente ? 'Ativa' : ($agendada ? 'Agendada' : ($expirada ? 'Expirada' : 'Inativa'));
+        $cor = $vigente ? 'success' : ($agendada ? 'info' : 'secondary');
     @endphp
     <div class="col-md-4">
         <div class="card card-dashboard {{ $expirada ? 'opacity-50' : '' }}">
@@ -23,7 +27,7 @@
             <div class="card-body">
                 <h5 class="fw-semibold">{{ $oferta->titulo }}</h5>
                 <span class="badge bg-{{ $oferta->tipo === 'imagem' ? 'primary' : 'danger' }}">{{ $oferta->tipo }}</span>
-                <span class="badge bg-{{ $vigente ? 'success' : 'secondary' }}">{{ $vigente ? 'Ativa' : ($expirada ? 'Expirada' : 'Inativa') }}</span>
+                <span class="badge bg-{{ $cor }}">{{ $status }}</span>
                 @if($oferta->data_inicio)
                 <div class="mt-1 small text-muted">Início: {{ $oferta->data_inicio->format('d/m/Y') }}</div>
                 @endif

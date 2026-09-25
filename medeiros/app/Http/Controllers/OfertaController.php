@@ -9,9 +9,7 @@ class OfertaController extends Controller
 {
     public function index()
     {
-        Oferta::where('data_fim', '<', now()->format('Y-m-d'))
-            ->where('ativa', true)
-            ->update(['ativa' => false]);
+        Oferta::vencidas()->update(['ativa' => false]);
 
         $ofertas = Oferta::latest()->get();
         return view('dashboard.marketing.ofertas', compact('ofertas'));
