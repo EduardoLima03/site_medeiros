@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Oferta;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class GerarThumbsOfertas extends Command
 {
@@ -12,6 +13,14 @@ class GerarThumbsOfertas extends Command
 
     public function handle()
     {
+        $blocked = array_filter(['exec', 'escapeshellarg'], fn($fn) => !function_exists($fn));
+        if ($blocked) {
+            foreach ($blocked as $fn) {
+                $this->warn("Funcao $fn() desabilitada no PHP - nao e possivel gerar thumbnails de PDF.");
+            }
+            return Command::SUCCESS;
+        }
+
         $ofertas = Oferta::where('tipo', 'pdf')->whereNull('thumb')->get();
 
         if ($ofertas->isEmpty()) {
@@ -19,7 +28,7 @@ class GerarThumbsOfertas extends Command
             return Command::SUCCESS;
         }
 
-        $thumbDir = storage_path('app/public/ofertas/thumbs');
+        $thumbDir = Storage::disk('public')->path('ofertas/thumbs');
         if (!is_dir($thumbDir)) {
             mkdir($thumbDir, 0755, true);
         }
@@ -27,7 +36,7 @@ class GerarThumbsOfertas extends Command
         $count = 0;
 
         foreach ($ofertas as $oferta) {
-            $pdfPath = storage_path('app/public/' . $oferta->arquivo);
+            $pdfPath = Storage::disk('public')->path($oferta->arquivo);
             if (!file_exists($pdfPath)) {
                 $this->warn("Arquivo nao encontrado: {$oferta->arquivo}");
                 continue;

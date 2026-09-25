@@ -142,7 +142,7 @@ class CurriculoController extends Controller
             return redirect()->back()->with('error', 'Este currículo não possui anexo PDF.');
         }
 
-        return response()->download(storage_path('app/public/'.$curriculo->arquivo));
+        return response()->download(\Illuminate\Support\Facades\Storage::disk('public')->path($curriculo->arquivo));
     }
 
     public function imprimir(Curriculo $curriculo)

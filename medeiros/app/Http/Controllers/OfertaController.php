@@ -84,7 +84,11 @@ class OfertaController extends Controller
         $oferta = Oferta::create($data);
 
         if ($data['tipo'] === 'pdf') {
-            $this->gerarThumbnailPdf($oferta);
+            try {
+                $this->gerarThumbnailPdf($oferta);
+            } catch (\Throwable $e) {
+                logger()->error('Thumb PDF nao gerado (nao bloqueia o save): ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('marketing.ofertas')->with('success', 'Oferta cadastrada!');
@@ -130,7 +134,11 @@ class OfertaController extends Controller
         $oferta->update($data);
 
         if ($data['tipo'] === 'pdf' && $novoArquivo) {
-            $this->gerarThumbnailPdf($oferta);
+            try {
+                $this->gerarThumbnailPdf($oferta);
+            } catch (\Throwable $e) {
+                logger()->error('Thumb PDF nao gerado (nao bloqueia o save): ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('marketing.ofertas')->with('success', 'Oferta atualizada!');
@@ -138,10 +146,15 @@ class OfertaController extends Controller
 
     private function gerarThumbnailPdf(Oferta $oferta)
     {
-        $pdfPath = storage_path('app/public/' . $oferta->arquivo);
+        $pdfPath = \Illuminate\Support\Facades\Storage::disk('public')->path($oferta->arquivo);
         if (!file_exists($pdfPath)) return;
 
-        $thumbDir = storage_path('app/public/ofertas/thumbs');
+        if (!function_exists('exec') || !function_exists('escapeshellarg')) {
+            logger()->warning('exec()/escapeshellarg() desabilitados - nao foi possivel gerar thumbnail do PDF');
+            return;
+        }
+
+        $thumbDir = \Illuminate\Support\Facades\Storage::disk('public')->path('ofertas/thumbs');
         if (!is_dir($thumbDir)) {
             mkdir($thumbDir, 0755, true);
         }

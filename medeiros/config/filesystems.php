@@ -40,7 +40,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => env('STORAGE_PUBLIC_PATH', public_path('storage')),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,
@@ -74,7 +74,8 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        // Os uploads usam o diretorio fisico public/storage (sem symlink),
+        // porque hospedagens compartilhadas (ex.: Locaweb) bloqueiam symlinks (HTTP 403).
     ],
 
 ];
