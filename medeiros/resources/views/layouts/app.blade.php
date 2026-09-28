@@ -151,6 +151,15 @@
             margin-top: auto; align-self: flex-start;
         }
         .btn-card-store:hover { background: #b27c00; color: #fff; }
+        .loja-contatos { display: flex; flex-direction: column; gap: 0.5rem; margin-top: auto; margin-bottom: 0.5rem; }
+        @media (min-width: 576px) {
+            .loja-contatos { flex-direction: row; }
+            .loja-contatos .btn-card-store {
+                flex: 1 1 0; min-width: 0; margin-top: 0; align-self: stretch; min-height: 2.6rem;
+                justify-content: center; text-align: center; font-size: 0.85rem;
+                padding-left: 0.4rem; padding-right: 0.4rem; line-height: 1.25;
+            }
+        }
 
         /* ===== Vagas ===== */
         .card-vaga {

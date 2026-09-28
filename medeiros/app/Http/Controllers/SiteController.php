@@ -68,12 +68,15 @@ class SiteController extends Controller
 
     private function lojasLista(): array
     {
+        // Telefone principal de todas as lojas (editável em Configurações).
+        $telefone = setting('phone_central') ?: '(85) 3291-2233';
+
         return [
-            ['nome' => 'Loja 1 - Pref. José Walter', 'endereco' => 'Av. J, 130 - Pref. José Walter, Fortaleza - CE', 'telefone' => '(85) 9 9159-2951', 'maps' => 'https://maps.app.goo.gl/6ABSApyN1iz8Sngn9', 'imagem' => '/images/loja_01.jpg', 'compra' => null],
-            ['nome' => 'Loja 2 - Pref. José Walter', 'endereco' => 'Av. I, 1313 - Pref. José Walter, Fortaleza - CE', 'telefone' => '(85) 9 9158-8829', 'maps' => 'https://maps.app.goo.gl/juu4Up2YDXJQRAaQ8', 'imagem' => '/images/loja_02.jpg', 'compra' => 'https://www.app.medeirossupermercado.cloud/'],
-            ['nome' => 'Loja 3 - Pacatuba', 'endereco' => 'Av. XX, n 230 - Cj - Jereissati II, Pacatuba - CE', 'telefone' => '(85) 9 8166-0326', 'maps' => 'https://maps.app.goo.gl/wk2upoHmCNjz8XgJ8', 'imagem' => '/images/loja_03.jpeg', 'compra' => 'https://www.app.pacatuba.medeirossupermercado.cloud/'],
-            ['nome' => 'Loja 4 - Siqueira', 'endereco' => 'R. Gen. Rabelo, 447 - Siqueira, Fortaleza - CE', 'telefone' => '(85) 9 8192-2785', 'maps' => 'https://maps.app.goo.gl/ku4fR96rSrr2sRwk6', 'imagem' => '/images/loja_04.jpeg', 'compra' => 'https://www.app.siqueira.medeirossupermercado.cloud/'],
-            ['nome' => 'Loja 5 - Conj. Palmeiras', 'endereco' => 'R. Evaldo Braga, 821 - Conj. Palmeiras, Fortaleza - CE, 60870-210', 'telefone' => '(85) 9 8694-0174', 'maps' => 'https://maps.app.goo.gl/4DecPGGyjJ4HbHwr6', 'imagem' => '/images/loja_05.jpeg', 'compra' => null],
+            ['nome' => 'Loja 1 - Pref. José Walter', 'endereco' => 'Av. J, 130 - Pref. José Walter, Fortaleza - CE', 'telefone' => $telefone, 'whatsapp' => '(85) 9 9159-2951', 'maps' => 'https://maps.app.goo.gl/6ABSApyN1iz8Sngn9', 'imagem' => '/images/loja_01.jpg', 'compra' => null],
+            ['nome' => 'Loja 2 - Pref. José Walter', 'endereco' => 'Av. I, 1313 - Pref. José Walter, Fortaleza - CE', 'telefone' => $telefone, 'whatsapp' => '(85) 9 9158-8829', 'maps' => 'https://maps.app.goo.gl/juu4Up2YDXJQRAaQ8', 'imagem' => '/images/loja_02.jpg', 'compra' => 'https://www.app.medeirossupermercado.cloud/'],
+            ['nome' => 'Loja 3 - Pacatuba', 'endereco' => 'Av. XX, n 230 - Cj - Jereissati II, Pacatuba - CE', 'telefone' => $telefone, 'whatsapp' => '(85) 9 8166-0326', 'maps' => 'https://maps.app.goo.gl/wk2upoHmCNjz8XgJ8', 'imagem' => '/images/loja_03.jpeg', 'compra' => 'https://www.app.pacatuba.medeirossupermercado.cloud/'],
+            ['nome' => 'Loja 4 - Siqueira', 'endereco' => 'R. Gen. Rabelo, 447 - Siqueira, Fortaleza - CE', 'telefone' => $telefone, 'whatsapp' => '(85) 9 8192-2785', 'maps' => 'https://maps.app.goo.gl/ku4fR96rSrr2sRwk6', 'imagem' => '/images/loja_04.jpeg', 'compra' => 'https://www.app.siqueira.medeirossupermercado.cloud/'],
+            ['nome' => 'Loja 5 - Conj. Palmeiras', 'endereco' => 'R. Evaldo Braga, 821 - Conj. Palmeiras, Fortaleza - CE, 60870-210', 'telefone' => $telefone, 'whatsapp' => '(85) 9 8694-0174', 'maps' => 'https://maps.app.goo.gl/4DecPGGyjJ4HbHwr6', 'imagem' => '/images/loja_05.jpeg', 'compra' => null],
         ];
     }
 }
