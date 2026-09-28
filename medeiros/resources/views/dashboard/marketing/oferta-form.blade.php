@@ -3,9 +3,11 @@
 @section('content')
 <h2 class="fw-bold mb-4">{{ isset($oferta) ? 'Editar Oferta' : 'Nova Oferta' }}</h2>
 
-<form action="{{ isset($oferta) ? route('marketing.ofertas.update', $oferta) : route('marketing.ofertas.store') }}" method="POST" enctype="multipart/form-data">
+<form id="ofertaForm" action="{{ isset($oferta) ? route('marketing.ofertas.update', $oferta) : route('marketing.ofertas.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @if(isset($oferta)) @method('PUT') @endif
+
+    <div id="ofertaAlertas"></div>
 
     <div class="card card-dashboard p-4">
         <div class="mb-3">
@@ -22,12 +24,16 @@
         </div>
         <div class="mb-3">
             <label class="form-label fw-semibold">Arquivo *</label>
-            <input type="file" name="arquivo" class="form-control @error('arquivo') is-invalid @enderror" accept=".jpg,.jpeg,.png,.pdf">
+            <input type="file" name="arquivo" id="arquivoInput" class="form-control @error('arquivo') is-invalid @enderror" accept=".jpg,.jpeg,.png,.pdf">
             <small class="text-muted">Máximo 100MB. Formatos: JPG, PNG, PDF</small>
             @if(isset($oferta))
             <br><small class="text-info">Deixe em branco para manter o arquivo atual.</small>
             @endif
             @error('arquivo') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            <div class="mt-2" id="thumbBox" hidden>
+                <img id="thumbPreview" alt="Prévia da 1ª página do PDF" style="max-height: 150px; border-radius: 8px; border: 1px solid #dee2e6;" hidden>
+                <div class="small text-muted mt-1" id="thumbAviso"></div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-6 mb-3">
@@ -53,3 +59,7 @@
     </div>
 </form>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/pdf-thumb.js') }}"></script>
+@endpush

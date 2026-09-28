@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Oferta;
+use App\Services\PdfThumbnail;
 use Illuminate\Http\Request;
 
 class OfertaController extends Controller
@@ -63,6 +64,7 @@ class OfertaController extends Controller
             'titulo' => 'required|string|max:255',
             'tipo' => 'required|in:imagem,pdf',
             'arquivo' => 'required|file|mimetypes:image/jpeg,image/png,application/pdf|max:102400',
+            'thumb' => 'nullable|file|mimetypes:image/jpeg,image/png|max:10240',
             'ativa' => 'boolean',
             'data_inicio' => 'nullable|date',
             'data_fim' => 'nullable|date|after_or_equal:data_inicio',
@@ -71,6 +73,7 @@ class OfertaController extends Controller
         $data['arquivo'] = $request->file('arquivo')->store('ofertas', 'public');
         $data['ativa'] = $request->boolean('ativa');
         $data['user_id'] = auth()->id();
+        unset($data['thumb']);
 
         if ($data['data_fim'] ?? false) {
             $fim = \Carbon\Carbon::parse($data['data_fim']);
@@ -82,11 +85,14 @@ class OfertaController extends Controller
         $oferta = Oferta::create($data);
 
         if ($data['tipo'] === 'pdf') {
-            try {
-                $this->gerarThumbnailPdf($oferta);
-            } catch (\Throwable $e) {
-                logger()->error('Thumb PDF nao gerado (nao bloqueia o save): ' . $e->getMessage());
-            }
+            $this->resolverThumbnail($request, $oferta);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Oferta cadastrada!',
+                'redirect' => route('marketing.ofertas'),
+            ]);
         }
 
         return redirect()->route('marketing.ofertas')->with('success', 'Oferta cadastrada!');
@@ -118,6 +124,7 @@ class OfertaController extends Controller
             'titulo' => 'required|string|max:255',
             'tipo' => 'required|in:imagem,pdf',
             'arquivo' => 'nullable|file|mimetypes:image/jpeg,image/png,application/pdf|max:102400',
+            'thumb' => 'nullable|file|mimetypes:image/jpeg,image/png|max:10240',
             'ativa' => 'boolean',
             'data_inicio' => 'nullable|date',
             'data_fim' => 'nullable|date|after_or_equal:data_inicio',
@@ -128,52 +135,66 @@ class OfertaController extends Controller
             $data['arquivo'] = $request->file('arquivo')->store('ofertas', 'public');
         }
         $data['ativa'] = $request->boolean('ativa');
+        unset($data['thumb']);
+
+        $arquivoTrocado = $novoArquivo && ($data['arquivo'] ?? null) !== $oferta->arquivo;
+
+        if ($arquivoTrocado) {
+            // A thumbnail antiga pertence ao PDF anterior: apaga o arquivo e o campo.
+            app(PdfThumbnail::class)->apagar($oferta);
+            $oferta->thumb = null;
+        }
 
         $oferta->update($data);
 
         if ($data['tipo'] === 'pdf' && $novoArquivo) {
-            try {
-                $this->gerarThumbnailPdf($oferta);
-            } catch (\Throwable $e) {
-                logger()->error('Thumb PDF nao gerado (nao bloqueia o save): ' . $e->getMessage());
-            }
+            $this->resolverThumbnail($request, $oferta);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Oferta atualizada!',
+                'redirect' => route('marketing.ofertas'),
+            ]);
         }
 
         return redirect()->route('marketing.ofertas')->with('success', 'Oferta atualizada!');
     }
 
-    private function gerarThumbnailPdf(Oferta $oferta)
+    /**
+     * Recebe a thumbnail da 1ª página renderizada no navegador pelo PDF.js.
+     */
+    public function thumb(Request $request, Oferta $oferta)
     {
-        $pdfPath = \Illuminate\Support\Facades\Storage::disk('public')->path($oferta->arquivo);
-        if (!file_exists($pdfPath)) return;
+        $request->validate([
+            'thumb' => 'required|file|mimetypes:image/jpeg,image/png|max:10240',
+        ]);
 
-        if (!function_exists('exec') || !function_exists('escapeshellarg')) {
-            logger()->warning('exec()/escapeshellarg() desabilitados - nao foi possivel gerar thumbnail do PDF');
-            return;
-        }
+        app(PdfThumbnail::class)->salvarEnviado($request->file('thumb'), $oferta);
 
-        $thumbDir = \Illuminate\Support\Facades\Storage::disk('public')->path('ofertas/thumbs');
-        if (!is_dir($thumbDir)) {
-            mkdir($thumbDir, 0755, true);
-        }
+        return response()->json(['ok' => true]);
+    }
 
-        $thumbName = pathinfo($oferta->arquivo, PATHINFO_FILENAME) . '_thumb.jpg';
-        $thumbPath = $thumbDir . '/' . $thumbName;
+    private function resolverThumbnail(Request $request, Oferta $oferta): void
+    {
+        try {
+            $thumbnails = app(PdfThumbnail::class);
 
-        $cmd = sprintf(
-            'gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r72 -dFirstPage=1 -dLastPage=1 -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=%s %s 2>/dev/null',
-            escapeshellarg($thumbPath),
-            escapeshellarg($pdfPath)
-        );
-        exec($cmd, $output, $exitCode);
+            if ($request->hasFile('thumb')) {
+                $thumbnails->salvarEnviado($request->file('thumb'), $oferta);
 
-        if ($exitCode === 0 && file_exists($thumbPath)) {
-            $oferta->update(['thumb' => 'ofertas/thumbs/' . $thumbName]);
+                return;
+            }
+
+            $thumbnails->gerar($oferta);
+        } catch (\Throwable $e) {
+            logger()->error('Thumb PDF nao gerado (nao bloqueia o save): '.$e->getMessage());
         }
     }
 
     public function destroy(Oferta $oferta)
     {
+        app(PdfThumbnail::class)->apagar($oferta);
         $oferta->delete();
         return redirect()->route('marketing.ofertas')->with('success', 'Oferta removida!');
     }

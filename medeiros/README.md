@@ -18,9 +18,9 @@ Site institucional do Supermercado Medeiros com sistema de gestão de ofertas, v
 ## Requisitos
 
 - PHP 8.2+
-- [Ghostscript](https://www.ghostscript.com/) (para thumbnails de PDF)
 - Composer
 - MySQL (recomendado) ou SQLite
+- Opcional: [Ghostscript](https://www.ghostscript.com/) ou a extensão Imagick (para gerar thumbnails de PDF no próprio servidor)
 
 ## Instalação
 
@@ -68,9 +68,23 @@ Senha `123456` para todos:
 # Desativar ofertas expiradas
 php artisan ofertas:atualizar-status
 
-# Regenerar thumbnails de PDFs
+# Regenerar thumbnails de PDFs (apenas se o servidor tiver Imagick ou Ghostscript)
 php artisan ofertas:gerar-thumbs
 ```
+
+## Thumbnail de PDF
+
+A thumbnail é a imagem da 1ª página do PDF. Ela é gerada da seguinte forma:
+
+1. **No navegador (padrão)** — ao anexar o PDF no formulário, o `public/js/pdf-thumb.js`
+   renderiza a 1ª página com [PDF.js](https://mozilla.github.io/pdf.js/) (carregado do CDN,
+   sem build) e envia o JPEG junto com a oferta. Ofertas antigas sem thumbnail podem ser
+   processadas no painel: **Marketing › Ofertas › Gerar thumbnails**.
+2. **No servidor (opcional)** — se o PHP tiver a extensão Imagick ou `exec()` + Ghostscript
+   disponíveis, o `php artisan ofertas:gerar-thumbs` gera as thumbnails que faltam.
+
+Hospedagens compartilhadas que bloqueiam `exec()` e não têm Imagick usam apenas o caminho 1,
+e não precisam de nenhuma alteração no PHP.
 
 ## Agendamento (cron do Scheduler)
 

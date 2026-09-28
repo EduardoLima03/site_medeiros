@@ -51,6 +51,7 @@ Route::middleware(['auth', \Illuminate\Session\Middleware\AuthenticateSession::c
         Route::post('/ofertas', [OfertaController::class, 'store'])->name('ofertas.store');
         Route::get('/ofertas/{oferta}/editar', [OfertaController::class, 'edit'])->name('ofertas.edit');
         Route::put('/ofertas/{oferta}', [OfertaController::class, 'update'])->name('ofertas.update');
+        Route::post('/ofertas/{oferta}/thumb', [OfertaController::class, 'thumb'])->name('ofertas.thumb');
         Route::delete('/ofertas/{oferta}', [OfertaController::class, 'destroy'])->name('ofertas.destroy');
     });
 

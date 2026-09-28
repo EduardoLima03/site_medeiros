@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Oferta;
+use App\Services\PdfThumbnail;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,16 +12,8 @@ class GerarThumbsOfertas extends Command
     protected $signature = 'ofertas:gerar-thumbs';
     protected $description = 'Gera thumbnails para todas as ofertas do tipo PDF que ainda nao possuem';
 
-    public function handle()
+    public function handle(PdfThumbnail $thumbnails)
     {
-        $blocked = array_filter(['exec', 'escapeshellarg'], fn($fn) => !function_exists($fn));
-        if ($blocked) {
-            foreach ($blocked as $fn) {
-                $this->warn("Funcao $fn() desabilitada no PHP - nao e possivel gerar thumbnails de PDF.");
-            }
-            return Command::SUCCESS;
-        }
-
         $ofertas = Oferta::where('tipo', 'pdf')->whereNull('thumb')->get();
 
         if ($ofertas->isEmpty()) {
@@ -28,33 +21,22 @@ class GerarThumbsOfertas extends Command
             return Command::SUCCESS;
         }
 
-        $thumbDir = Storage::disk('public')->path('ofertas/thumbs');
-        if (!is_dir($thumbDir)) {
-            mkdir($thumbDir, 0755, true);
+        if (! $thumbnails->suportaGerarNoServidor()) {
+            $this->warn('Este servidor nao renderiza PDF: exec()/escapeshellarg() desabilitadas e Imagick indisponivel.');
+            $this->info('Sem alterar o PHP, gere as thumbnails pelo painel:');
+            $this->line('  Dashboard > Marketing > Ofertas > "Gerar thumbnails" (o navegador renderiza com PDF.js).');
+            return Command::SUCCESS;
         }
 
         $count = 0;
 
         foreach ($ofertas as $oferta) {
-            $pdfPath = Storage::disk('public')->path($oferta->arquivo);
-            if (!file_exists($pdfPath)) {
+            if (! Storage::disk('public')->exists($oferta->arquivo)) {
                 $this->warn("Arquivo nao encontrado: {$oferta->arquivo}");
                 continue;
             }
 
-            $thumbName = pathinfo($oferta->arquivo, PATHINFO_FILENAME) . '_thumb.jpg';
-            $thumbPath = $thumbDir . '/' . $thumbName;
-
-            $cmd = sprintf(
-                'gs -dNOPAUSE -dBATCH -sDEVICE=jpeg -r72 -dFirstPage=1 -dLastPage=1 -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -sOutputFile=%s %s 2>/dev/null',
-                escapeshellarg($thumbPath),
-                escapeshellarg($pdfPath)
-            );
-
-            exec($cmd, $output, $exitCode);
-
-            if ($exitCode === 0 && file_exists($thumbPath)) {
-                $oferta->update(['thumb' => 'ofertas/thumbs/' . $thumbName]);
+            if ($thumbnails->gerar($oferta)) {
                 $this->info("Thumb gerado: {$oferta->titulo}");
                 $count++;
             } else {
