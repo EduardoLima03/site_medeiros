@@ -51,8 +51,11 @@ class SiteController extends Controller
     {
         $settings = SiteSetting::pluck('value', 'key');
         $vagas = Vaga::where('status', 'aberta')->latest()->get();
+        $vagasCandidatadas = auth()->check()
+            ? auth()->user()->candidaturas()->pluck('id', 'vaga_id')->all()
+            : [];
 
-        return view('site.trabalhe-conosco', compact('settings', 'vagas'));
+        return view('site.trabalhe-conosco', compact('settings', 'vagas', 'vagasCandidatadas'));
     }
 
     public function pagina($slug)

@@ -170,10 +170,20 @@
         .card-vaga:hover { transform: translateY(-4px); }
         .card-vaga h4 { font-weight: 800; }
         .card-vaga p { opacity: 0.92; font-size: 0.92rem; }
-        .card-vaga .vaga-badge {
-            background: var(--gold); color: #fff; font-weight: 700; font-size: 0.72rem;
+.card-vaga .vaga-badge {
+            background: var(--gold); color: #fff; font-weight: 700; font-size: 0.72rem; letter-spacing: 1px;
             padding: 0.3rem 0.8rem; border-radius: 1rem; align-self: flex-start; text-transform: uppercase;
         }
+        .card-vaga .vaga-marcada {
+            background: #fff; color: var(--dark-green); font-weight: 700;
+            padding: 0.4rem 0.9rem; border-radius: 2rem;
+        }
+        .card-vaga .btn-remover-vaga {
+            background: transparent; color: #fff; font-weight: 600; font-size: 0.82rem;
+            border: 1px solid rgba(255,255,255,0.7); border-radius: 2rem; padding: 0.35rem 0.95rem;
+            display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;
+        }
+        .card-vaga .btn-remover-vaga:hover { background: rgba(255,255,255,0.18); color: #fff; border-color: #fff; }
 
         /* ===== CTA app ===== */
         .cta-app {

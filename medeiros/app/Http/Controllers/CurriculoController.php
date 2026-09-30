@@ -6,6 +6,8 @@ use App\Models\Candidatura;
 use App\Models\Curriculo;
 use App\Models\Vaga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser;
 
 class CurriculoController extends Controller
@@ -13,8 +15,10 @@ class CurriculoController extends Controller
     public function create()
     {
         $vagas = Vaga::where('status', 'aberta')->get();
+        $curriculo = Curriculo::where('user_id', auth()->id())->latest()->first();
+        $vagasCandidatadas = auth()->user()->candidaturas()->pluck('vaga_id')->all();
 
-        return view('site.cadastrar-curriculo', compact('vagas'));
+        return view('site.cadastrar-curriculo', compact('vagas', 'curriculo', 'vagasCandidatadas'));
     }
 
     public function store(Request $request)
@@ -35,35 +39,51 @@ class CurriculoController extends Controller
             'vaga_id' => 'nullable|exists:vagas,id',
         ]);
 
-        $data['user_id'] = auth()->id();
+        $dados = Arr::except($data, ['vaga_id', 'arquivo']);
+
+        // O candidato tem um unico curriculo: reaproveitado e atualizado a cada candidatura.
+        $curriculo = Curriculo::where('user_id', auth()->id())->latest()->first();
+        $arquivoAnterior = $curriculo?->arquivo;
 
         if ($request->hasFile('arquivo')) {
-            $data['arquivo'] = $request->file('arquivo')->store('curriculos', 'public');
+            $dados['arquivo'] = $request->file('arquivo')->store('curriculos', 'public');
 
             $pdfText = $this->extrairTextoPdf($request->file('arquivo')->getPathname());
             if ($pdfText) {
                 foreach (['objetivo', 'formacao', 'experiencia_profissional'] as $campo) {
-                    if (empty($data[$campo])) {
-                        $data[$campo] = $this->extrairSecao($pdfText, $campo);
+                    if (empty($dados[$campo])) {
+                        $dados[$campo] = $this->extrairSecao($pdfText, $campo);
                     }
                 }
-                if (empty($data['objetivo'])) {
-                    $data['objetivo'] = $pdfText;
+                if (empty($dados['objetivo'])) {
+                    $dados['objetivo'] = $pdfText;
                 }
             }
         }
 
-        Curriculo::create($data);
+        $curriculo = $curriculo ?? new Curriculo;
+        $curriculo->fill($dados);
+        $curriculo->user_id = auth()->id();
+        $curriculo->save();
 
-        if ($request->filled('vaga_id')) {
-            Candidatura::create([
-                'vaga_id' => $request->vaga_id,
-                'user_id' => auth()->id(),
-                'status' => 'candidatado',
-            ]);
+        if ($arquivoAnterior && $arquivoAnterior !== $curriculo->arquivo) {
+            Storage::disk('public')->delete($arquivoAnterior);
         }
 
-        return redirect()->route('rh.home')->with('success', 'Currículo cadastrado com sucesso!');
+        if (! $request->filled('vaga_id')) {
+            return redirect()->route('dashboard')->with('success', 'Currículo salvo com sucesso!');
+        }
+
+        $candidatura = Candidatura::firstOrCreate([
+            'vaga_id' => $request->vaga_id,
+            'user_id' => auth()->id(),
+        ], ['status' => 'candidatado']);
+
+        if (! $candidatura->wasRecentlyCreated) {
+            return redirect()->route('dashboard')->with('info', 'Você já possui candidatura para esta vaga.');
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Candidatura registrada com sucesso!');
     }
 
     private function extrairTextoPdf($caminho): ?string

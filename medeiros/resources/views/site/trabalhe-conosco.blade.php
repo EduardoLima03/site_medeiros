@@ -29,7 +29,17 @@
                     @endif
                     <h4 class="mb-2">{{ $vaga->titulo }}</h4>
                     <p>{{ Str::limit($vaga->descricao, 150) }}</p>
+@if(isset($vagasCandidatadas[$vaga->id]))
+                    <div class="mt-auto d-flex align-items-center gap-2 flex-wrap">
+                        <span class="vaga-marcada"><i class="bi bi-check-circle me-1"></i> Você já se candidatou</span>
+                        <form action="{{ route('dashboard.candidaturas.destroy', $vagasCandidatadas[$vaga->id]) }}" method="POST" onsubmit="return confirm('Remover sua candidatura para esta vaga?')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn-remover-vaga"><i class="bi bi-x-circle"></i> remover candidatura</button>
+                        </form>
+                    </div>
+                    @else
                     <a href="{{ route('site.curriculo', ['vaga_id' => $vaga->id]) }}" class="btn-encarte mt-auto align-self-start">Candidatar-se</a>
+                    @endif
                 </div>
             </div>
             @endforeach

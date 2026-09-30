@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CandidaturaController;
 use App\Http\Controllers\CurriculoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MediaController;
@@ -42,6 +43,9 @@ Route::middleware(['auth', \Illuminate\Session\Middleware\AuthenticateSession::c
     // Alterar senha
     Route::get('/senha', [AuthController::class, 'changePassword'])->name('dashboard.senha');
     Route::put('/senha', [AuthController::class, 'updatePassword'])->name('dashboard.senha.update');
+
+    // Candidaturas do proprio cliente
+    Route::delete('/candidaturas/{candidatura}', [CandidaturaController::class, 'destroy'])->name('dashboard.candidaturas.destroy');
 
     // Marketing
     Route::middleware('role:marketing,admin')->prefix('/marketing')->name('marketing.')->group(function () {

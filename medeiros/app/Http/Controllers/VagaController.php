@@ -9,7 +9,7 @@ class VagaController extends Controller
 {
     public function index()
     {
-        $vagas = Vaga::latest()->get();
+        $vagas = Vaga::with('user')->withCount('candidaturas')->latest()->get();
 
         return view('dashboard.rh.vagas', compact('vagas'));
     }

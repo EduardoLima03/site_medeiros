@@ -23,7 +23,7 @@ $statusLabels = [
                     <p class="mb-1 fw-semibold">{{ $curriculo->nome }}</p>
                     <p class="text-muted small mb-0">{{ $curriculo->email }} · {{ $curriculo->telefone }}</p>
                     @if($curriculo->arquivo)
-                    <div class="mt-2"><a href="#" class="small text-success"><i class="bi bi-download"></i> Ver PDF</a></div>
+                    <div class="mt-2"><span class="small text-success"><i class="bi bi-file-earmark-check"></i> PDF cadastrado</span></div>
                     @endif
                 </div>
                 @else
@@ -57,7 +57,7 @@ $statusLabels = [
                 <div class="table-responsive">
                     <table class="table align-middle mb-0">
                         <thead class="table-light">
-                            <tr><th>Vaga</th><th>Status</th><th>Data</th></tr>
+                            <tr><th>Vaga</th><th>Status</th><th>Data</th><th class="text-end">Ações</th></tr>
                         </thead>
                         <tbody>
                             @foreach($candidaturas as $candidatura)
@@ -66,11 +66,21 @@ $statusLabels = [
                                 <td class="fw-semibold">{{ $candidatura->vaga->titulo ?? '—' }}</td>
                                 <td><span class="badge bg-{{ $statusInfo[1] }}">{{ $statusInfo[0] }}</span></td>
                                 <td class="text-muted small">{{ $candidatura->created_at->format('d/m/Y') }}</td>
+                                <td class="text-end">
+                                    <form action="{{ route('dashboard.candidaturas.destroy', $candidatura->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Remover sua candidatura para esta vaga?')">
+                                        @csrf @method('DELETE')
+                                        <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-x-lg"></i> Remover</button>
+                                    </form>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
+                <p class="text-muted small mb-0 mt-2">
+                    <i class="bi bi-info-circle"></i>
+                    Seu currículo cadastrado é reaproveitado em todas as candidaturas, sem precisar enviar novamente.
+                </p>
                 @else
                 <p class="text-muted mb-0">Nenhuma candidatura realizada.</p>
                 @endif
