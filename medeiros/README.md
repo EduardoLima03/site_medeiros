@@ -51,6 +51,85 @@ docker run -d --name medeiros-db \
 php artisan serve --port=8000
 ```
 
+## Instalação em hospedagem compartilhada
+
+O projeto já é compatível com hospedagem compartilhada: **não há build de front** (Bootstrap e ícones
+via CDN, CSS inline em `resources/views/layouts/app.blade.php`), os uploads ficam em pasta física
+(sem symlink) e a thumbnail de PDF é gerada no navegador.
+
+### Estrutura de pastas
+
+Com raiz do domínio alterada para uma pasta externa (cPanel → Domínios → Alterar raiz):
+
+```
+/home/USUARIO/laravel/        -> conteúdo de medeiros/ (app, bootstrap, config, database,
+                                 resources, routes, storage, vendor, artisan, .env)
+/home/USUARIO/public_html/    -> conteúdo de medeiros/public/ (index.php, .htaccess,
+                                 .user.ini, images, js, favicon.ico, robots.txt, storage/)
+```
+
+### Passos
+
+```bash
+# 1. enviar o código (vendor/ e public/storage estão no .gitignore)
+cd /home/USUARIO/laravel
+composer install --no-dev --optimize-autoloader
+
+# 2. .env: APP_ENV=production, APP_DEBUG=false, APP_URL=https://www.dominio.com.br,
+#    dados do MySQL do cPanel e o caminho físico dos uploads
+# STORAGE_PUBLIC_PATH=/home/USUARIO/public_html/storage
+php artisan key:generate
+
+# 3. permissões
+chmod -R 775 storage bootstrap/cache
+chmod -R 755 /home/USUARIO/public_html/storage
+
+# 4. banco (sem os usuários de teste do seeder)
+php artisan migrate --force
+php artisan db:seed --class=SiteSettingsSeeder
+php artisan db:seed --class=PageContentsSeeder
+php artisan db:seed --class=PageBlocksSeeder
+php artisan db:seed --class=VagasSeeder
+
+# 5. admin (o seeder cria usuários com a senha 123456, não use em produção)
+php artisan tinker
+>>> App\Models\User::create(['name' => 'Administrador', 'email' => 'seu@email.com', 'password' => Hash::make('senhaForte123'), 'role' => 'admin']);
+```
+
+Sem Composer no servidor, rode `composer install --no-dev --optimize-autoloader` localmente e envie
+a pasta `vendor/`. Sem Git/SSH, envie um zip com `medeiros/` (sem `vendor/` e sem `.env`).
+
+Se não for possível alterar a raiz do domínio, envie `medeiros/` para `public_html/laravel/`, copie o
+conteúdo de `medeiros/public/` para `public_html/` e crie em `public_html/index.php`:
+
+```php
+<?php
+define('LARAVEL_START', microtime(true));
+$base = __DIR__ . '/laravel';
+if (file_exists($m = $base . '/storage/framework/maintenance.php')) { require $m; }
+require $base . '/vendor/autoload.php';
+$app = require_once $base . '/bootstrap/app.php';
+$app->handleRequest(Illuminate\Http\Request::capture());
+```
+
+### Cron
+
+As ofertas expiradas são desativadas 1x/dia pelo agendador do Laravel:
+
+```bash
+* * * * * cd /home/USUARIO/laravel && php artisan schedule:run >> /dev/null 2>&1
+```
+
+### Atualizar o site
+
+```bash
+cd /home/USUARIO/laravel
+git pull
+composer install --no-dev --optimize-autoloader
+php artisan migrate --force
+php artisan optimize:clear
+```
+
 ## Usuários de teste (seeder)
 
 Senha `123456` para todos:
