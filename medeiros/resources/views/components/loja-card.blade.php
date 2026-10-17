@@ -4,6 +4,9 @@
 @endphp
 <div class="col-md-6 col-lg-4">
     <div class="card-loja">
+        @if(!empty($loja['imagem']))
+        <img src="{{ $loja['imagem'] }}" alt="{{ $loja['nome'] }}" class="loja-img" loading="lazy">
+        @endif
         <div class="d-flex align-items-center gap-3 mb-2">
             <i class="bi bi-shop loja-icon"></i>
             <h5 class="mb-0">{{ $loja['nome'] }}</h5>

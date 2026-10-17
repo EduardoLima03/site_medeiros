@@ -140,7 +140,12 @@
         .card-loja {
             background: var(--dark-green); color: #fff; border-radius: var(--radius);
             padding: 1.6rem; height: 100%; display: flex; flex-direction: column;
-            box-shadow: 0 10px 24px rgba(45,80,22,0.2);
+            box-shadow: 0 10px 24px rgba(45,80,22,0.2); overflow: hidden;
+        }
+        .card-loja .loja-img {
+            width: calc(100% + 3.2rem); height: 180px; object-fit: cover; display: block;
+            margin: -1.6rem -1.6rem 1rem -1.6rem;
+            border-radius: var(--radius) var(--radius) 0 0;
         }
         .card-loja .loja-icon { font-size: 2rem; color: var(--gold); }
         .card-loja h5 { font-weight: 800; }
